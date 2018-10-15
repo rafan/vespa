@@ -221,6 +221,7 @@ public class VdsStreamingSearcher extends VespaBackEndSearcher {
             lazyTrace(query, 8, "Skipping some hits for query: ", result.getQuery());
         }
 
+        result.hits().setSorted(true);
         lazyTrace(query, 8, "Returning result ", result);
 
         if ( skippedHits>0 ) {
