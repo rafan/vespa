@@ -24,6 +24,9 @@ public class GatewayThrottler {
         } else {
             backOffTimeMs = Math.max(0, backOffTimeMs - distribute(10));
         }
+        if (backOffTimeMs != 0) {
+            System.out.println("handleCall: " + transientErrors + " transientErrors, sleep " + backOffTimeMs + " milliseconds");
+        }
         sleepMs(backOffTimeMs);
     }
 

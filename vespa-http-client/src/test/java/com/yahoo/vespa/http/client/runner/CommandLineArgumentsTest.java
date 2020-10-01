@@ -83,7 +83,7 @@ public class CommandLineArgumentsTest {
         addMinimum();
         CommandLineArguments arguments = CommandLineArguments.build(asArray());
         SessionParams params = arguments.createSessionParams(false /* use json */);
-        assertThat(params.getClientQueueSize(), is(10000));
+        assertThat(params.getClientQueueSize(), is(10000*2));
         assertThat(params.getThrottlerMinSize(), is(0));
         assertThat(params.getClusters().size(), is(1));
         assertThat(params.getClusters().get(0).getEndpoints().size(), is(1));
@@ -115,7 +115,7 @@ public class CommandLineArgumentsTest {
         add("header", "Header-Name: Header-Value");
         CommandLineArguments arguments = CommandLineArguments.build(asArray());
         SessionParams params = arguments.createSessionParams(true /* use json */);
-        assertThat(params.getClientQueueSize(), is(3456));
+        assertThat(params.getClientQueueSize(), is(3456*2));
         assertThat(params.getThrottlerMinSize(), is(10));
         assertThat(params.getClusters().get(0).getEndpoints().get(0).getPort(), is(1234));
         assertThat(params.getClusters().get(0).getEndpoints().get(0).isUseSsl(), is(true));

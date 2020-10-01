@@ -277,6 +277,7 @@ public class IOThread implements Runnable, AutoCloseable {
         for (EndpointResult endpointResult : endpointResults) {
             if (endpointResult.getDetail().getResultType() == Result.ResultType.TRANSITIVE_ERROR) {
                 transientErrors++;
+                System.out.println("Got transient error: " + endpointResult.getDetail().toString());
             }
             resultQueue.resultReceived(endpointResult, clusterId);
         }
@@ -407,7 +408,9 @@ public class IOThread implements Runnable, AutoCloseable {
         try {
             // Take it easy we have problems getting a connection up.
             if (stopSignal.getCount() > 0 || !documentQueue.isEmpty()) {
-                Thread.sleep(gatewayThrottler.distribute(3000));
+                int sleepMs = gatewayThrottler.distribute(3000);
+                System.out.println("Sleep " + sleepMs + " to get connection synced");
+                Thread.sleep(sleepMs);
             }
         } catch (InterruptedException e) {
         }

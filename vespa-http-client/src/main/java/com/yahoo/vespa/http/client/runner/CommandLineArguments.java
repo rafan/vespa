@@ -152,6 +152,14 @@ public class CommandLineArguments {
             description = "The port for the host of the gateway.")
     private int portArg = 4080;
 
+    @Option(name = {"--proxyHost"},
+            description = "proxy host")
+    private String proxyHostArg;
+
+    @Option(name = {"--proxyPort"},
+            description = "proxy port")
+    private int proxyPortArg = 4080;
+
     @Option(name = {"--timeout"},
             description = "(=180) The time (in seconds) allowed for sending operations.")
     private long timeoutArg = 180;
@@ -204,6 +212,10 @@ public class CommandLineArguments {
     @Option(name = {"--maxChunkSizeBytes"},
             description = "How much data to send to gateway in each message.")
     private int maxChunkSizeBytes = 20 * 1024;
+
+    @Option(name = {"--maxSleepTimeMs"},
+            description = "maxSleepTimeMs")
+    private int maxSleepTimeMs = 3 * 1000; // same as FeedParams default
 
     @Option(name = {"--whenVerboseEnabledPrintMessageForEveryXDocuments"},
             description = "How often to print verbose message.)")
@@ -273,6 +285,7 @@ public class CommandLineArguments {
                                 .setLocalQueueTimeOut(timeoutArg * 1000)
                                 .setPriority(priorityArg)
                                 .setMaxChunkSizeBytes(maxChunkSizeBytes)
+                                .setMaxSleepTimeMs(maxSleepTimeMs)
                                 .build()
                 )
                 .setConnectionParams(
@@ -291,11 +304,13 @@ public class CommandLineArguments {
                                 .setCaCertificates(caCertificatesPath)
                                 .setUseTlsConfigFromEnvironment(useTlsConfigFromEnvironment)
                                 .setConnectionTimeToLive(Duration.ofSeconds(connectionTimeToLive))
+                                .setProxyHost(proxyHostArg)
+                                .setProxyPort(proxyPortArg)
                                 .build()
                 )
                         // Enable dynamic throttling.
                 .setThrottlerMinSize(minThrottleValue)
-                .setClientQueueSize(maxPendingOperationCountArg);
+                .setClientQueueSize(maxPendingOperationCountArg*2); // XXX match VespaRecordWriter
         if (endpointArg != null) {
             try {
                 builder.addCluster(new Cluster.Builder()
